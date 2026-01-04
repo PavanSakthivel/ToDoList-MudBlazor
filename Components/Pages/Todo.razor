@@ -1,0 +1,54 @@
+@page "/todo"
+@rendermode InteractiveServer
+
+<MudText Typo="Typo.h5" Class="mb-4">
+    Todo (@todos.Count(todo => !todo.IsDone))
+</MudText>
+
+<MudList T="Todo">
+    @foreach (var todo in todos)
+    {
+        <MudListItem T="Todo" Class="d-flex align-items-center">
+            <MudCheckBox @bind-Checked="todo.IsDone" />
+
+            <MudTextField @bind-Value="todo.Title"
+                          Variant="Variant.Text"
+                          Immediate="true"
+                          Class="ml-2 flex-grow-1" />
+        </MudListItem>
+    }
+</MudList>
+
+<MudDivider Class="my-4" />
+
+<MudTextField @bind-Value="newTodo"
+              Label="New Todo"
+              Variant="Variant.Outlined"
+              FullWidth="true" />
+
+<MudButton Class="mt-3"
+           Color="Color.Primary"
+           Variant="Variant.Filled"
+           OnClick="AddTodo">
+    Add Todo
+</MudButton>
+
+@code {
+    private List<TodoModel> todos = new();
+    private string newTodo = string.Empty;
+
+    void AddTodo()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodo))
+        {
+            todos.Add(new TodoModel { Title = newTodo });
+            newTodo = string.Empty;
+        }
+    }
+
+    public class TodoModel
+    {
+        public string Title { get; set; } = string.Empty;
+        public bool IsDone { get; set; }
+    }
+}
