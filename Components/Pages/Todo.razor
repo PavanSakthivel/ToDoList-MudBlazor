@@ -5,16 +5,21 @@
     Todo (@todos.Count(todo => !todo.IsDone))
 </MudText>
 
-<MudList T="Todo">
+<MudList T="TodoModel" DisablePadding="true">
     @foreach (var todo in todos)
     {
-        <MudListItem T="Todo" Class="d-flex align-items-center">
+        <MudListItem T="TodoModel" DisableGutters="true">
+
             <MudCheckBox @bind-Checked="todo.IsDone" />
 
             <MudTextField @bind-Value="todo.Title"
                           Variant="Variant.Text"
                           Immediate="true"
                           Class="ml-2 flex-grow-1" />
+
+            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                           Color="Color.Error"
+                           OnClick="@(() => RemoveTodo(todo))" />
         </MudListItem>
     }
 </MudList>
@@ -46,9 +51,15 @@
         }
     }
 
+    void RemoveTodo(TodoModel todo)
+    {
+        todos.Remove(todo);
+    }
+
     public class TodoModel
     {
         public string Title { get; set; } = string.Empty;
         public bool IsDone { get; set; }
     }
 }
+
