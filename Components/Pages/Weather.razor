@@ -3,37 +3,38 @@
 
 <PageTitle>Weather</PageTitle>
 
-<h1>Weather</h1>
+<MudText Typo="Typo.h4" GutterBottom="true">
+    Weather
+</MudText>
 
-<p>This component demonstrates showing data.</p>
+<MudText Typo="Typo.body1" Class="mb-4">
+    This component demonstrates showing data.
+</MudText>
 
 @if (forecasts == null)
 {
-    <p><em>Loading...</em></p>
+    <MudProgressCircular Indeterminate="true" />
+    <MudText Typo="Typo.body2" Class="mt-2">
+        Loading...
+    </MudText>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th aria-label="Temperature in Celsius">Temp. (C)</th>
-                <th aria-label="Temperature in Fahrenheit">Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <MudTable Items="forecasts" Dense="true" Hover="true" Striped="true">
+        <HeaderContent>
+            <MudTh>Date</MudTh>
+            <MudTh>Temp. (C)</MudTh>
+            <MudTh>Temp. (F)</MudTh>
+            <MudTh>Summary</MudTh>
+        </HeaderContent>
+
+        <RowTemplate>
+            <MudTd>@context.Date.ToShortDateString()</MudTd>
+            <MudTd>@context.TemperatureC</MudTd>
+            <MudTd>@context.TemperatureF</MudTd>
+            <MudTd>@context.Summary</MudTd>
+        </RowTemplate>
+    </MudTable>
 }
 
 @code {
@@ -41,11 +42,15 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // Simulate asynchronous loading to demonstrate streaming rendering
         await Task.Delay(500);
 
         var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
+        var summaries = new[]
+        {
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild",
+            "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        };
+
         forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
             Date = startDate.AddDays(index),
